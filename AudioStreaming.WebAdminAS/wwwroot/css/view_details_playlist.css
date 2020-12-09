@@ -1,0 +1,33 @@
+﻿.div_top{
+    width: 100%;
+    height: 5%;
+}
+.div_left {
+    padding-top: 2%;
+    float: left;
+    width: 30%;
+    height: 95%;
+}
+.div_right {
+    float: left;
+    width: 70%;
+    height: 95%;
+}
+#img_playlist{
+    width: 100%;
+    height: 30%;
+}
+#title_media{
+    font-size: 25px;
+    font-weight: bold;
+    color: rebeccapurple;
+}
+#title_playlist {
+    font-size: 30px;
+    font-weight: bold;
+    color: darkslateblue;
+}
+#form_update {
+    width: 50px !important;
+    height: 50px !important;
+}

@@ -1,0 +1,192 @@
+﻿@model AudioStreaming.WebAdminAS.Models.Media.MediaModel
+@{
+    ViewData["Title"] = "Update Media";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+<div class="container-fluid">
+    <h1 class="mt-4">Audio Streaming</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+        @{
+            if (@ViewBag.PlaylistId != null)
+            {
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Playlists">Playlists</a></li>
+            }
+        }        
+        <li class="breadcrumb-item active">Update Media</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+              <h3 class="btn btn-success">Update Media @Model.MusicName</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="col-md-4">
+                <form asp-action="UpdateMedia" asp-controller="Media" id="formSubmit">
+                    <input asp-for="Id" class="form-control" hidden="hidden" />
+                    <div class="form-group">
+                        <label asp-for="MusicName" class="control-label"></label>
+                        <input asp-for="MusicName" class="form-control" />
+                        <span asp-validation-for="MusicName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ImageUrl" class="control-label"></label>
+                        <input asp-for="ImageUrl" class="form-control" id="img_change"/>
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        <br />
+                        <img src="@Model.ImageUrl" onerror="this.src='/assets/img/folder_browse-512.png'" id="img_show" style="width:50%; height:50%;">
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Author" class="control-label"></label>
+                        <input asp-for="Author" class="form-control" />
+                        <span asp-validation-for="Author" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Singer" class="control-label"></label>
+                        <input asp-for="Singer" class="form-control" />
+                        <span asp-validation-for="Singer" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <select name="type_media" id="type_media_id">
+                            @foreach (var item in ViewBag.TypeMedia)
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <select data-placeholder="Select Category Name" multiple class="chosen-select" name="category" id="select_catergory">
+                            <option value=""></option>
+                            @foreach (var x in ViewBag.Category)
+                            {
+                                bool flag = false;
+                                @foreach (var item in Model.CategoryMedia)
+                                {
+                                    if (x.Id == item.Category.ElementAt(0).Id)
+                                    {
+                                        flag = true;
+                                    }
+                                }
+                                if (flag)
+                                {
+                                    <option value="@x.Id" selected="selected">@x.CategoryName</option>
+                                }
+                                else
+                                {
+                                    <option value="@x.Id">@x.CategoryName</option>
+                                }
+
+                            }
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input class="file-input" type="file" multiple id="upload">
+                    </div>
+                    <input type="hidden" value="@ViewBag.PlaylistId" name="PlaylistID" />
+                    <input type="hidden" value="@ViewBag.PlaylistName" name="PlaylistName" />
+                    <input type="hidden" value="@ViewBag.Page" name="page" />
+                    <input type="hidden" value="@Model.Url" name="Url" id="URLMedia" />
+                    <input type="hidden" value="@Model.FileName" name="FileName" id="file_name" />
+                    <div class="form-group">
+                        <h3 class="btn btn-primary" onclick="uploadMedia()">Create</h3>
+                    </div>
+                </form>
+                <input type="hidden" value="@Model.FileName" id="file_name_delete"/>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(".chosen-select").chosen({
+        no_results_text: "Oops, nothing found!"
+    });
+    $("#img_change").change(function () {
+        $('#img_show').attr('src', $("#img_change").val());
+    });
+</script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-analytics.js"></script>
+
+<script>
+    // Your web app's Firebase configuration
+    console.log(1);
+    var firebaseConfig = {
+        apiKey: "AIzaSyDSxCd191lfP-8cclNT-Bms19ycL6RPd6A",
+        authDomain: "loginkhanhnd.firebaseapp.com",
+        databaseURL: "https://loginkhanhnd.firebaseio.com",
+        projectId: "loginkhanhnd",
+        storageBucket: "loginkhanhnd.appspot.com",
+        messagingSenderId: "320102385552",
+        appId: "1:320102385552:web:9b0cc6e50df6f7a5f95515",
+        measurementId: "G-FNV8FL7NF1"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+
+    function uploadMedia() {
+        var isValid = $("#formSubmit").valid();
+        if (isValid == false) {
+            return;
+        }
+        if ($("#select_catergory").val() == null) {
+            alert("category not null");
+            return;
+        }
+        const ref = firebase.storage().ref();
+        const file = document.querySelector("#upload").files[0];
+        if (document.querySelector("#upload").files[0] == undefined) {
+            alert("pls select file media.mp3");
+            return;
+        }
+        if (file.name.split('.').pop() != "mp3") {
+            alert("only accept file mp3");
+            return;
+        }
+        const name = +new Date() + "-" + file.name;
+
+        const metadata = {
+            contentType: file.type
+        };
+        const task = ref.child(name).put(file, metadata);
+        task
+            .then(snapshot => snapshot.ref.getDownloadURL())
+            .then(url => {               
+                var fileName = $('#file_name_delete').val();
+                if (fileName == null || fileName == undefined || fileName == "") {
+                    $('#URLMedia').val(url);
+                    $('#file_name').val(name);
+                    $('#formSubmit').submit();
+                } else {
+                    const ref = firebase.storage().ref();
+                    var desertRef = ref.child(fileName);
+                    desertRef.delete().then(function () {
+                        $('#URLMedia').val(url);
+                        $('#file_name').val(name);
+                        $('#formSubmit').submit();
+                    }).catch(function (error) {
+                        alert("delete old file error!!!");
+                    });
+                }
+
+            })
+            .catch(e => {
+                alert("Create Media In Storge Error");
+            });
+    }
+
+
+</script>

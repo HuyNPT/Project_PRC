@@ -1,0 +1,101 @@
+﻿@model AudioStreaming.WebAdminAS.Models.PlaylistResponse
+@{
+    ViewData["Title"] = "Update Playlist";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+<div class="container-fluid">
+    <h1 class="mt-4">Audio Streaming</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Playlists">Playlists</a></li>
+        <li class="breadcrumb-item active">Update Playlist</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <a class="btn btn-success" asp-action="Index" asp-controller="Home">Home Page</a>
+        </div>
+
+        <div class="card-body">
+            <div class="col-md-4">
+                <form asp-action="UpdatePlaylist" id="formSubmit">
+                    <div class="form-group">
+                        <label asp-for="PlaylistName" class="control-label"></label>
+                        <input asp-for="PlaylistName" class="form-control" />
+                        <span asp-validation-for="PlaylistName" class="text-danger"></span>
+                    </div>
+                    <input asp-for="Id" class="form-control" hidden="hidden" />
+                    <div class="form-group">
+                        <label asp-for="DateFillter" class="control-label"></label>
+                        <input asp-for="DateFillter" class="form-control" />
+                        <span asp-validation-for="DateFillter" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ImageUrl" class="control-label"></label>
+                        <input asp-for="ImageUrl" class="form-control" id="img_change" />
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        <br />
+                        <img src="@Model.ImageUrl" onerror="this.src='/assets/img/folder_browse-512.png'" id="img_show" style="width:50%; height:50%;">
+                    </div>
+                    <div class="form-group">
+                        <select data-placeholder="Select Category Name" multiple class="chosen-select" name="category" id="select_catergory">
+                            <option value=""></option>
+                            @foreach (var x in ViewBag.Category)
+                            {
+                                bool flag = false;
+                                @foreach (var item in Model.CategoryPlaylists)
+                                {
+                                    if (x.Id == item.Category.ElementAt(0).Id)
+                                    {
+                                        flag = true;
+                                    }
+                                }
+                                if (flag)
+                                {
+                                    <option value="@x.Id" selected="selected">@x.CategoryName</option>
+                                }
+                                else
+                                {
+                                    <option value="@x.Id">@x.CategoryName</option>
+                                }
+
+                            }
+
+                        </select>
+                    </div>
+                    <script>
+                        $(".chosen-select").chosen({
+                            no_results_text: "Oops, nothing found!"
+                        });
+                        $("#img_change").change(function () {
+                            $('#img_show').attr('src', $("#img_change").val());
+                        });
+                    </script>
+                    <div class="form-group">
+                        <h3 class="btn btn-primary" onclick="createClick()">Create</h3>
+                    </div>
+                    <input type="hidden" name="page" value="@ViewBag.Page">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function createClick() {
+        var isValid = $("#formSubmit").valid();
+        if (isValid == false) {
+            return;
+        }
+        if ($("#select_catergory").val() == null) {
+            alert("category not null");
+            return;
+        }
+        $('#formSubmit').submit();
+    }
+</script>
+

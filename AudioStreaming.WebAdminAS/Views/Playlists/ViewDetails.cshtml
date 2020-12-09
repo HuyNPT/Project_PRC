@@ -1,0 +1,172 @@
+﻿@model AudioStreaming.WebAdminAS.Models.PlaylistModel.Playlist
+@{
+    ViewData["Title"] = "ViewDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="/css/view_details_playlist.css" rel="stylesheet" />
+<link href="/css/delete_dialog.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="div_top">
+        <h1 class="mt-4">Audio Streaming</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Playlists">Playlists</a></li>
+            <li class="breadcrumb-item active">View Playlist Details</li>
+        </ol>
+    </div>
+    <div class="div_left">
+        <img src="@Model.PlaylistSelected.ImageUrl" onerror="this.src='/assets/img/error_img.jpg'" id="img_playlist" />
+        <h3 id="title_playlist">Playlist Name: @Model.PlaylistSelected.PlaylistName</h3>
+        <p>
+            @{ foreach (var x in Model.PlaylistSelected.CategoryPlaylists)
+                {
+
+                    @Html.DisplayFor(modelItem => x.Category.ElementAt(0).CategoryName);
+                    <content>#</content>
+                }
+            }
+        </p>
+        <form asp-action="Index" asp-controller="CreateMedia">
+            <input type="hidden" name="id" value="@Model.PlaylistSelected.Id" />
+            <input type="hidden" name="name" value="@Model.PlaylistSelected.PlaylistName" />
+            <input type="submit" value="Create New Media" class="btn btn-primary" />
+        </form>
+        <br />
+        <form asp-action="Index" asp-controller="Media">
+            <input type="hidden" name="playlistId" value="@Model.PlaylistSelected.Id" />
+            <input type="hidden" name="playlistName" value="@Model.PlaylistSelected.PlaylistName" />
+            <input type="submit" value="Add Existed Media" class="btn btn-primary" />
+        </form>
+
+    </div>
+    <div class="div_right">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tbody>
+                        @{ 
+                            if(Model.ListMedia.Count == 0)
+                            {
+                                <tr>
+                                    <td><h1>Empty Media</h1></td>
+                                </tr>
+                            }
+                        }
+                        @foreach (var item in Model.ListMedia)
+                        {
+                            <tr>
+                                <td>
+                                    <h3 id="title_media">
+                                        @Html.DisplayFor(modelItem => item.MusicName)
+                                    </h3>
+                                    <br />
+                                    author: @Html.DisplayFor(modelItem => item.Author)
+                                    -singer: @Html.DisplayFor(modelItem => item.Singer)
+                                </td>                                
+                                <td>
+                                    @{ foreach (var x in item.CategoryMedia)
+                                        {
+                                            @Html.DisplayFor(modelItem => x.Category.ElementAt(0).CategoryName);
+                                            <content>#</content>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    <img src="@item.ImageUrl" onerror="this.src='/assets/img/error_img.jpg'" width="50" height="50" />
+                                </td>
+                                <td>
+                                    <form asp-action="UpdateMediaPage" asp-controller="Media" id="form_update">
+                                        <input type="hidden" value="@Model.PlaylistSelected.Id" name="playlistId" />
+                                        <input type="hidden" value="@item.Id" name="id" />
+                                        <input type="hidden" value="" name="page" />
+                                        <input type="hidden" value="@Model.PlaylistSelected.PlaylistName" name="playlistName" />
+                                        <button type="submit"><img src="~/assets/img/red-edit-icon-glossy-md.png" id="img_link"/></button>
+                                    </form>|<button class="delete" data-value1="@item.Id" data-value2="@Model.PlaylistSelected.Id" data-value3="@item.FileName"><img src="~/assets/img/delete-752-546711.png" id="img_link"></button>                                                                      
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="dialog">
+    <div class="c_dialog">
+        <h1>Do you want to delete!!!</h1>
+        <form asp-action="DeleteMedia" id="form_delete">
+            <input type="button" id="yes" value="YES">
+            <input type="button" id="no" value="NO">
+            <input type="hidden" value="" id="id_delete" name="MediaId" />
+            <input type="hidden" value="" id="playlist_id" name="PlaylistID" />
+        </form>
+        <input type="hidden" value="" id="file_name_delete" />
+    </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-analytics.js"></script>
+
+<script type="text/javascript">
+    console.log(1);
+    var firebaseConfig = {
+        apiKey: "AIzaSyDSxCd191lfP-8cclNT-Bms19ycL6RPd6A",
+        authDomain: "loginkhanhnd.firebaseapp.com",
+        databaseURL: "https://loginkhanhnd.firebaseio.com",
+        projectId: "loginkhanhnd",
+        storageBucket: "loginkhanhnd.appspot.com",
+        messagingSenderId: "320102385552",
+        appId: "1:320102385552:web:9b0cc6e50df6f7a5f95515",
+        measurementId: "G-FNV8FL7NF1"
+    };
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    
+    $(document).ready(function () {
+        $(".delete").click(function () {
+            $('#id_delete').val($(this).data("value1"));
+            $('#playlist_id').val($(this).data("value2"));
+            $('#file_name_delete').val($(this).data("value3"));
+            $(".dialog").css({
+                "display": "block"
+            });
+        });
+    });
+    $(document).ready(function () {
+        $(".dialog").css({
+            "display": "none"
+        });
+    });
+    $(document).ready(function () {
+        $("#no").click(function () {
+            $(".dialog").css({
+                "display": "none"
+            });
+        });
+    });
+    $(document).ready(function () {
+        $("#yes").click(function () {
+            $(".dialog").css({
+                "display": "none"
+            });
+            var fileName = $('#file_name_delete').val();
+            if (fileName == null || fileName == undefined || fileName == "") {
+                $('#form_delete').submit();
+            } else {
+                const ref = firebase.storage().ref();
+                var desertRef = ref.child(fileName);               
+                desertRef.delete().then(function () {
+                    $('#form_delete').submit();
+                }).catch(function (error) {
+                    alert("delete error!!!");
+                });            
+            }
+            
+        });
+    });
+
+
+</script>

@@ -1,0 +1,100 @@
+﻿@{        
+    Layout = null;
+}
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Login Page</title>
+        <link href="/css/login_page.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>                
+        <div id="container">            
+            <img src="~/assets/img/background.jpg" id="img_background">            
+            <div class="d_login">
+                <div class="d1">
+                    <img src="~/assets/img/logo_aus.png">
+                    <h3>Audio Streaming</h3>
+                </div>                    
+                <div class="d2">
+                    <div class="col s12 m6 offset-m3 center-align">
+                        <div class="oauth-container btn darken-4 white black-text" onclick="login()" style="text-transform:none">
+                            <div class="left">
+                                <img width="20px" style="margin-top:7px; margin-right:8px" alt="Google sign-in"
+                                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                            </div>
+                            Login with Google
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-auth.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-analytics.js"></script>
+
+        <script>
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyDSxCd191lfP-8cclNT-Bms19ycL6RPd6A",
+                authDomain: "loginkhanhnd.firebaseapp.com",
+                databaseURL: "https://loginkhanhnd.firebaseio.com",
+                projectId: "loginkhanhnd",
+                storageBucket: "loginkhanhnd.appspot.com",
+                messagingSenderId: "320102385552",
+                appId: "1:320102385552:web:9b0cc6e50df6f7a5f95515",
+                measurementId: "G-FNV8FL7NF1"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            firebase.analytics();
+            var provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+            async function login() {
+                firebase.auth().signInWithPopup(provider).then(async function (result) {
+                    // This gives you a Google Access Token. You can use it to access the Google API.
+                    var token = result.credential.accessToken;
+                    // The signed-in user info.
+                    var user = result.user;
+                    //var aaa = await firebase.auth.currentUser();
+                    const Idtoken = await firebase
+                        .auth()
+                        .currentUser.getIdToken(true);
+                    document.getElementById("token").value = Idtoken;
+                    document.getElementById("myForm").submit();
+                }).catch(function (error) {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    // The email of the user's account used.
+                    var email = error.email;
+                    // The firebase.auth.AuthCredential type that was used.
+                    var credential = error.credential;
+                    // ...
+                });
+
+            }
+        </script>
+        <form action="/Users/Login/token" method="post" id="myForm">
+            <input type="hidden" name="token" id="token" value="" />
+        </form>
+    </body>
+    </html>
+
+

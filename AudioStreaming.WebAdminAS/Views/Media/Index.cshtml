@@ -1,0 +1,287 @@
+﻿@using AudioStreaming.WebAdminAS.Models.Media
+@model MediaDTO
+@{
+    ViewData["Title"] = "Media Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = null;
+}
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+<script src="/js/jquery.twbsPagination.js"></script>
+<link href="~/css/delete_dialog.css" rel="stylesheet" />
+
+<div class="container-fluid">
+    <h1 class="mt-4">Audio Streaming</h1>
+    <ol class="breadcrumb mb-4">
+        @{
+            if (ViewBag.PlaylistName == null)
+            {
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+                <li class="breadcrumb-item active">Media Page</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Playlists">Playlists</a></li>
+                <li class="breadcrumb-item active">Add Media</li>
+            }
+        }
+
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            @{
+                if (ViewBag.PlaylistName == null)
+                {
+                    <h3 class="btn btn-success">MEDIA</h3>
+                }
+                else
+                {
+                    <h3 class="btn btn-success">ADD MEDIA FOR PLAYLIST : @ViewBag.PlaylistName.ToUpper()</h3>
+                }
+            }
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                Media Name
+                            </th>
+                            <th>
+                                Create date
+                            </th>
+                            <th>
+                                Modify date
+                            </th>
+                            <th>
+                                Image
+                            </th>
+                            <th>
+                                Author
+                            </th>
+                            <th>
+                                Singer
+                            </th>
+                            <th>
+                                Category
+                            </th>
+                            @{
+                                if (ViewBag.PlaylistName != null)
+                                {
+                                    <th>Add/Remove</th>                                    
+                                }
+                                else
+                                {
+                                    <th>Update</th>
+                                    <th>Delete</th>
+                                }
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ListMedia)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MusicName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreateDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ModifyDate)
+                                </td>
+                                <td>
+
+                                    <img src="@item.ImageUrl" onerror="this.src='/assets/img/error_img.jpg'" width="50" height="50" />
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Author)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Singer)
+                                </td>
+                                <td>
+                                    @{ foreach (var x in item.CategoryMedia)
+                                        {
+                                            @Html.DisplayFor(modelItem => x.Category.ElementAt(0).CategoryName);
+                                            <content>#</content>
+                                        }
+                                    }
+                                </td>
+
+                                @{
+                                    if (ViewBag.PlaylistName != null)
+                                    {
+                                        bool flag = false;
+                                        foreach (var x in @ViewBag.PlaylistDetails)
+                                        {
+                                            if (x.MediaId == item.Id)
+                                            {
+                                                flag = true;
+                                            }
+                                        }
+                                        if (flag)
+                                        {
+                                            <td>
+                                                <form asp-action="Remove" asp-controller="Media">
+                                                    <input type="hidden" value="@ViewBag.PlaylistId" name="playlistId" />
+                                                    <input type="hidden" value="@item.Id" name="mediaId" />
+                                                    <input type="hidden" value="@ViewBag.Page" name="page" />
+                                                    <input type="hidden" value="@ViewBag.PlaylistName" name="playlistName" />
+                                                    <button class="btn btn-primary" style="width: 100px; background-color: red;">-REMOVE</button>
+                                                </form>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <form asp-action="Add" asp-controller="Media">
+                                                    <input type="hidden" value="@ViewBag.PlaylistId" name="playlistId" />
+                                                    <input type="hidden" value="@item.Id" name="mediaId" />
+                                                    <input type="hidden" value="@ViewBag.Page" name="page" />
+                                                    <input type="hidden" value="@ViewBag.PlaylistName" name="playlistName" />
+                                                    <button style="width: 100px !important; background-color: green;">+ADD</button>
+                                                </form>
+                                            </td>
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <form asp-action="UpdateMediaPage" asp-controller="Media">
+                                                <input type="hidden" value="@ViewBag.PlaylistId" name="playlistId" />
+                                                <input type="hidden" value="@item.Id" name="id" />
+                                                <input type="hidden" value="@ViewBag.Page" name="page" />
+                                                <input type="hidden" value="@ViewBag.PlaylistName" name="playlistName" />
+                                                <button type="submit"><img src="~/assets/img/red-edit-icon-glossy-md.png" id="img_link"></button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <button class="delete" data-value1="@item.Id" data-value2="@ViewBag.Page" data-value3="@item.FileName"><img src="~/assets/img/delete-752-546711.png" id="img_link"></button>
+                                        </td>
+
+                                    }
+                                }
+
+
+                            </tr>
+
+                                    }
+                    </tbody>
+                </table>
+                <div class="form-group">
+                    <a class="btn btn-primary" asp-action="Index" asp-controller="CreateMedia">Create New Media</a>
+                </div>
+                <div class="container">
+                    <nav aria-label="Page navigation">
+                        <form action="/Media/Index"
+                              id="formSubmit" method="get">
+                            <ul class="pagination" id="pagination"></ul>
+                            <input type="hidden" value="" id="page" name="page" />
+                            <input type="hidden" value="@ViewBag.PlaylistId" name="playlistId" />
+                            <input type="hidden" value="@ViewBag.PlaylistName" name="playlistName" />
+                        </form>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="dialog">
+    <div class="c_dialog">
+        <h1>Do you want to delete!!!</h1>
+        <form asp-action="DeleteMedia" asp-controller="Playlists" id="form_delete">
+            <input type="button" id="yes" value="YES">
+            <input type="button" id="no" value="NO">
+            <input type="hidden" value="" id="id_delete" name="MediaId" />
+            <input type="hidden" value="" id="page_current" name="page" />
+        </form>
+        <input type="hidden" value="" id="file_name_delete" />
+    </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-analytics.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var totalPage =@ViewBag.Count;
+        var currentPage = @ViewBag.Page;
+        window.pagObj = $('#pagination').twbsPagination({
+            totalPages: totalPage,
+            visiblePages: 10,
+            startPage: currentPage,
+            onPageClick: function (event, page) {
+                if (currentPage != page) {
+                    console.log(page);
+                    $('#page').val(page);
+                    $('#formSubmit').submit();
+                }
+            }
+        });
+    });
+
+    console.log(1);
+    var firebaseConfig = {
+        apiKey: "AIzaSyDSxCd191lfP-8cclNT-Bms19ycL6RPd6A",
+        authDomain: "loginkhanhnd.firebaseapp.com",
+        databaseURL: "https://loginkhanhnd.firebaseio.com",
+        projectId: "loginkhanhnd",
+        storageBucket: "loginkhanhnd.appspot.com",
+        messagingSenderId: "320102385552",
+        appId: "1:320102385552:web:9b0cc6e50df6f7a5f95515",
+        measurementId: "G-FNV8FL7NF1"
+    };
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    $(document).ready(function () {
+        $(".delete").click(function () {
+            $('#id_delete').val($(this).data("value1"));
+            $('#page_current').val($(this).data("value2"));
+            $('#file_name_delete').val($(this).data("value3"));
+            $(".dialog").css({
+                "display": "block"
+            });
+        });
+    });
+    $(document).ready(function () {
+        $(".dialog").css({
+            "display": "none"
+        });
+    });
+    $(document).ready(function () {
+        $("#no").click(function () {
+            $(".dialog").css({
+                "display": "none"
+            });
+        });
+    });
+    $(document).ready(function () {
+        $("#yes").click(function () {
+            $(".dialog").css({
+                "display": "none"
+            });
+            var fileName = $('#file_name_delete').val();
+            if (fileName == null || fileName == undefined || fileName == "") {
+                $('#form_delete').submit();
+            } else {
+                const ref = firebase.storage().ref();
+                var desertRef = ref.child(fileName);
+                desertRef.delete().then(function () {
+                    $('#form_delete').submit();
+                }).catch(function (error) {
+                    alert("delete error!!!");
+                });
+            }
+
+        });
+    });
+
+
+</script>

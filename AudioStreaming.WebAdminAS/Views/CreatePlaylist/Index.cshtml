@@ -1,0 +1,82 @@
+﻿@model AudioStreaming.WebAdminAS.Models.PlaylistModel.CreatePlaylist
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+<div class="container-fluid">
+    <h1 class="mt-4">Audio Streaming</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Playlists">Playlists</a></li>
+        <li class="breadcrumb-item active">Create New Playlist</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <a class="btn btn-success" asp-action="Index" asp-controller="Home">Home Page</a>
+        </div>
+
+        <div class="card-body">
+            <div class="col-md-4">
+                <form asp-action="Create" id="formSubmit">
+                    <div class="form-group">
+                        <label asp-for="PlaylistName" class="control-label"></label>
+                        <input asp-for="PlaylistName" class="form-control" />
+                        <span asp-validation-for="PlaylistName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DateFilter" class="control-label"></label>
+                        <input asp-for="DateFilter" class="form-control" />
+                        <span asp-validation-for="DateFilter" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ImageUrl" class="control-label"></label>
+                        <input asp-for="ImageUrl" class="form-control" id="img_change" />
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        <br />
+                        <img src="" onerror="this.src='/assets/img/folder_browse-512.png'" id="img_show" style="width:50%; height:50%;">
+                    </div>
+                    <div class="form-group">
+                        <select data-placeholder="Select Category Name" multiple class="chosen-select" name="category" id="select_catergory">
+                            <option value=""></option>
+                            @foreach (var item in Model.Category)
+                            {
+                                <option value="@item.Id">@item.CategoryName</option>
+                            }
+                        </select>
+                    </div>
+                    <script>
+                        $(".chosen-select").chosen({
+                            no_results_text: "Oops, nothing found!"
+                        });
+                        $("#img_change").change(function () {
+                            $('#img_show').attr('src', $("#img_change").val());
+                        });
+                    </script>
+                    <div class="form-group">
+                        <h3 class="btn btn-primary" onclick="createClick()">Create</h3>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function createClick() {
+        var isValid = $("#formSubmit").valid();
+        if (isValid == false) {
+            return;
+        }
+        if ($("#select_catergory").val() == null) {
+            alert("category not null");
+            return;
+        }
+        $('#formSubmit').submit();
+    }
+</script>
+

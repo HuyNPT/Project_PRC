@@ -1,0 +1,163 @@
+﻿@model AudioStreaming.WebAdminAS.Models.Media.CreateMedia
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+<div class="container-fluid">
+    <h1 class="mt-4">Audio Streaming</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Playlists">Playlists</a></li>
+        <li class="breadcrumb-item active">Create New Media</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            @{
+                if (Model.PlaylistName == null)
+                {
+                    <h3 class="btn btn-success">CREATE NEW MEDIA</h3>
+                }
+                else
+                {
+                    <h3 class="btn btn-success">CREATE NEW MEDIA FOR PLAYLIST : @Model.PlaylistName.ToUpper()</h3>
+                }
+            }
+
+        </div>
+
+        <div class="card-body">
+            <div class="col-md-4">
+                <form asp-action="Create" id="formSubmit">
+                    <div class="form-group">
+                        <label asp-for="MediaName" class="control-label"></label>
+                        <input asp-for="MediaName" class="form-control" />
+                        <span asp-validation-for="MediaName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ImgURL" class="control-label"></label>
+                        <input asp-for="ImgURL" class="form-control" id="img_change"/>
+                        <span asp-validation-for="ImgURL" class="text-danger"></span>
+                        <br />
+                        <img src="" onerror="this.src='/assets/img/folder_browse-512.png'" id="img_show" style="width:50%; height:50%;">
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Author" class="control-label"></label>
+                        <input asp-for="Author" class="form-control" />
+                        <span asp-validation-for="Author" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Singer" class="control-label"></label>
+                        <input asp-for="Singer" class="form-control" />
+                        <span asp-validation-for="Singer" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <select name="type_media" id="type_media_id">
+                            @foreach (var item in Model.TypeMedia)
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <select data-placeholder="Select Category Name" multiple class="chosen-select" name="category" id="select_catergory">
+                            <option value=""></option>
+                            @foreach (var item in Model.Category)
+                            {
+                                <option value="@item.Id">@item.CategoryName</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input class="file-input" type="file" multiple id="upload">
+                    </div>
+                    <input type="hidden" value="@Model.PlaylistID" name="PlaylistID" />
+                    <input type="hidden" value="@Model.Url" name="Url" id="URLMedia" />
+                    <input type="hidden" value="@Model.FileName" name="FileName" id="file_name"/>
+                    <div class="form-group">
+                        <h3 class="btn btn-primary" onclick="uploadMedia()">Create</h3>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(".chosen-select").chosen({
+        no_results_text: "Oops, nothing found!"
+    });
+    $("#img_change").change(function () {
+        $('#img_show').attr('src', $("#img_change").val());
+    });
+</script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-analytics.js"></script>
+
+<script>
+    // Your web app's Firebase configuration
+    console.log(1);
+    var firebaseConfig = {
+        apiKey: "AIzaSyDSxCd191lfP-8cclNT-Bms19ycL6RPd6A",
+        authDomain: "loginkhanhnd.firebaseapp.com",
+        databaseURL: "https://loginkhanhnd.firebaseio.com",
+        projectId: "loginkhanhnd",
+        storageBucket: "loginkhanhnd.appspot.com",
+        messagingSenderId: "320102385552",
+        appId: "1:320102385552:web:9b0cc6e50df6f7a5f95515",
+        measurementId: "G-FNV8FL7NF1"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+
+    function uploadMedia() {
+        var isValid = $("#formSubmit").valid();
+        if (isValid == false) {
+            return;
+        }
+        if ($("#select_catergory").val() == null) {
+            alert("category not null");
+            return;
+        }
+        const ref = firebase.storage().ref();
+        const file = document.querySelector("#upload").files[0];
+        if (document.querySelector("#upload").files[0] == undefined) {
+            alert("pls select file media.mp3");
+            return;
+        }
+        if (file.name.split('.').pop() != "mp3") {
+            alert("only accept file mp3");
+            return;
+        }
+        const name = +new Date() + "-" + file.name;
+
+        const metadata = {
+            contentType: file.type
+        };
+        const task = ref.child(name).put(file, metadata);
+        task
+            .then(snapshot => snapshot.ref.getDownloadURL())
+            .then(url => {
+                $('#URLMedia').val(url);
+                $('#file_name').val(name);
+                $('#formSubmit').submit();
+
+            })
+            .catch(e => {
+                alert("Create Media In Storge Error");
+            });
+    }
+
+
+</script>
