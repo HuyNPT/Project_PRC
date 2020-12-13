@@ -35,7 +35,7 @@ namespace ASS_PRC.Api
             #region Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Audio Streaming Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ASS_PRC Api", Version = "v1" });
               
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -102,9 +102,7 @@ namespace ASS_PRC.Api
 
             builder.RegisterType<AccountService>().As<IAccountService>();
             builder.RegisterType<PlaylistService>().As<IPlaylistService>();       
-            builder.RegisterType<MediaService>().As<IMediaService>();
-            builder.RegisterType<StoresService>().As<IStoresService>();
-            builder.RegisterType<BrandsService>().As<IBrandsService>();
+            builder.RegisterType<MediaService>().As<IMediaService>();           
             builder.RegisterType<CategoryServices>().As<ICategoryServices>();
             builder.RegisterType<PlaylistDetailsService>().As<IPlaylistDetailsService>();
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
@@ -130,7 +128,7 @@ namespace ASS_PRC.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Audio Streamin Api V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASS PRC Api V1");
                 c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
 
             });

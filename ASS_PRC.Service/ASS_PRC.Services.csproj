@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AudioStreaming.Data\ASS_PRC.Data.csproj" />
+    <ProjectReference Include="..\ASS_PRC.Data\ASS_PRC.Data.csproj" />
   </ItemGroup>
 
 </Project>
