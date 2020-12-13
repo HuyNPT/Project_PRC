@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AudioStreaming.Api.Helpers;
-using AudioStreaming.Api.Models.Request;
-using AudioStreaming.Api.Models.RequestAdmin;
-using AudioStreaming.Services.Services;
+using ASS_PRC.Api.Helpers;
+using ASS_PRC.Api.Models.Request;
+using ASS_PRC.Api.Models.RequestAdmin;
+using ASS_PRC.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace AudioStreaming.Api.Controllers
+namespace ASS_PRC.Api.Controllers
 {
     [Authorize]
     [Route(Helpers.SettingVersionAPI.ApiVersion)]
@@ -22,17 +22,7 @@ namespace AudioStreaming.Api.Controllers
         {
             _playlistService = playlistService;
         }
-
-        /// <summary>
-        /// Deletes a specific TodoItem.
-        /// </summary>
-        [AllowAnonymous]
-        [HttpGet()]
-        public ActionResult GetPlaylists([FromQuery]GetPlaylistRequest request)
-        {
-            var result = _playlistService.GetPlayList(request.IsSort, request.IsDescending, request.IsPaging, request.PageNumber ,request.PageLimitItem,request.OrderBy , request.SearchKey);
-            return Ok(JsonConvert.SerializeObject(result));
-        }
+      
 
         [Authorize(Roles = Role.Admin)]
         [HttpGet("admin")]
@@ -42,40 +32,8 @@ namespace AudioStreaming.Api.Controllers
             var result =await _playlistService.GetPlayListWebAdmin(request.SortType, request.IsPaging, request.PageNumber, request.PageLimitItem, request.SearchKey,OwnerCode);
             return Ok(JsonConvert.SerializeObject(result));
         }
-        [Authorize(Roles = Role.User+ ","+ Role.Admin)]       
-        [HttpGet("users")]
-        public ActionResult GetUserFavotitePlaylists()
-        {
-            Guid userId =new Guid(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            if(userId == null)
-            {
-                return StatusCode(401, "User is not valid");
-            }
-            var result = _playlistService.GetUserFavoritePlayList(userId);
-            return Ok(JsonConvert.SerializeObject(result));
-        }
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("{searchKey}")]
-        public ActionResult GetPlayList([FromQuery]GetPlaylistRequest request)
-        {
-            var result = _playlistService.GetPlayList(request.IsSort, request.IsDescending, request.IsPaging, request.PageNumber, request.PageLimitItem, request.OrderBy, request.SearchKey);
-            return Ok(JsonConvert.SerializeObject(result));
-        }
-        [Authorize(Roles = Role.Admin)]
-        [HttpPut("admin/{playlistId}")]
-        public async System.Threading.Tasks.Task<ActionResult> PutPlaylistAsync(Guid playlistId,[FromBody]Services.DTO.Playlist playlist)
-        {
-            Guid ownerCode = new Guid(User.FindFirst("OwnerCode")?.Value);
-            if (ownerCode == null)
-            {
-                return Unauthorized("Your role not permission");
-            }
-            var result =await _playlistService.PutPlaylist(playlistId, playlist, ownerCode);
-            if (result.Equals("Your role not permission")) return Unauthorized(result);
-            if (result.Equals("Playlist not exist")) return NotFound(result);
-            return Ok(result);
-        }
+        
+       
         [Authorize(Roles = Role.Admin)]
         [HttpPost("admin")]
 
@@ -133,27 +91,6 @@ namespace AudioStreaming.Api.Controllers
             {
                 return Ok(JsonConvert.SerializeObject(rs));
             }
-        }
-
-        [Authorize(Roles = Role.Admin)]
-        [HttpPut]
-        public async Task<IActionResult> PutPlaylist([FromBody] PutPlaylistRequest rq)
-        {
-            Guid UserID = new Guid(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            Guid OwnerCode = new Guid(User.FindFirst("OwnerCode")?.Value);
-            var rs = await _playlistService.PutPlayListWebAdmin(rq.PlaylistID, rq.PlaylistName, rq.DateFillter, rq.ImageUrl, rq.Category, UserID, OwnerCode);
-            if (rs == "Unauthorized")
-            {
-                return Unauthorized();
-            }
-            else if (rs == "Fail")
-            {
-                return BadRequest();
-            }
-            else
-            {
-                return Ok();
-            }
-        }
+        }       
     }
 }

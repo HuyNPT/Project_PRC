@@ -1,14 +1,14 @@
-﻿using AudioStreaming.Services.Services;
+﻿using ASS_PRC.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using AudioStreaming.Api.Models.Request;
+using ASS_PRC.Api.Models.Request;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
-using AudioStreaming.Api.Helpers;
+using ASS_PRC.Api.Helpers;
 using System.Security.Claims;
 
-namespace AudioStreaming.Api.Controllers
+namespace ASS_PRC.Api.Controllers
 {
     [Authorize]
     [Route(Helpers.SettingVersionAPI.ApiVersion)]

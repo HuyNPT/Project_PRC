@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace AudioStreaming.Api.Controllers
+namespace ASS_PRC.Api.Controllers
 {
     public class HomeController : Controller
     {

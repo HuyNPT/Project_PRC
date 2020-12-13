@@ -1,9 +1,9 @@
 ﻿using System;
-using AudioStreaming.Data.Entity;
+using ASS_PRC.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace AudioStreaming.Data.Context
+namespace ASS_PRC.Data.Context
 {
     public partial class AudioStreamingContext : DbContext
     {

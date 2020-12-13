@@ -1,10 +1,10 @@
-﻿using AudioStreaming.Data.Repository;
+﻿using ASS_PRC.Data.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AudioStreaming.Data.UnitOfWork
+namespace ASS_PRC.Data.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {

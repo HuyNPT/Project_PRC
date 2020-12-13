@@ -1,12 +1,12 @@
-﻿using AudioStreaming.Data.Entity;
-using AudioStreaming.Data.UnitOfWork;
+﻿using ASS_PRC.Data.Entity;
+using ASS_PRC.Data.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AudioStreaming.Services.Services
+namespace ASS_PRC.Services.Services
 {
     public class CategoryServices : ICategoryServices
     {

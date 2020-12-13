@@ -1,12 +1,12 @@
-﻿using AudioStreaming.Data.Context;
-using AudioStreaming.Data.Repository;
+﻿using ASS_PRC.Data.Context;
+using ASS_PRC.Data.Repository;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AudioStreaming.Data.UnitOfWork
+namespace ASS_PRC.Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {

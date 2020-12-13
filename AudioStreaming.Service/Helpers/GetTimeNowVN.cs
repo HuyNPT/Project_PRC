@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AudioStreaming.Services.Helpers
+namespace ASS_PRC.Services.Helpers
 {
     public static class GetTimeNowVN
     {       

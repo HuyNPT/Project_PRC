@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AudioStreaming.Services.DTO
+namespace ASS_PRC.Services.DTO
 {
     public class Category
     {

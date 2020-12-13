@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using AudioStreaming.Data.Entity;
+using ASS_PRC.Data.Entity;
 
-namespace AudioStreaming.Services.Services
+namespace ASS_PRC.Services.Services
 {
     public interface IPlaylistDetailsService
     {

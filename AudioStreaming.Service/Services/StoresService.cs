@@ -1,11 +1,11 @@
-﻿using AudioStreaming.Data.UnitOfWork;
-using AudioStreaming.Services.DTO;
+﻿using ASS_PRC.Data.UnitOfWork;
+using ASS_PRC.Services.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AudioStreaming.Services.Services
+namespace ASS_PRC.Services.Services
 {
     public class StoresService : IStoresService
     {

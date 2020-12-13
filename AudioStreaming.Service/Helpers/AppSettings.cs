@@ -1,4 +1,4 @@
-﻿namespace AudioStreaming.Services.Helpers
+﻿namespace ASS_PRC.Services.Helpers
 {
     public class AppSettings
     {

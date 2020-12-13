@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AudioStreaming.Api.Helpers;
-using AudioStreaming.Services.Services;
+using ASS_PRC.Api.Helpers;
+using ASS_PRC.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace AudioStreaming.Api.Controllers
+namespace ASS_PRC.Api.Controllers
 {
     [Authorize]
     [Route(Helpers.SettingVersionAPI.ApiVersion)]

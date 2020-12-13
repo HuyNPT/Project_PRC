@@ -1,11 +1,11 @@
-﻿using AudioStreaming.Data.Context;
+﻿using ASS_PRC.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AudioStreaming.Data.Repository
+namespace ASS_PRC.Data.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {

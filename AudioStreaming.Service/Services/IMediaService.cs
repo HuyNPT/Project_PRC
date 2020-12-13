@@ -1,9 +1,9 @@
-﻿using AudioStreaming.Services.DTO;
+﻿using ASS_PRC.Services.DTO;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AudioStreaming.Services.Services
+namespace ASS_PRC.Services.Services
 {
     public interface IMediaService
     {

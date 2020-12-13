@@ -1,14 +1,10 @@
-﻿using AudioStreaming.Api.Models.Request;
-using AudioStreaming.Services.Helpers;
-using AudioStreaming.Services.Services;
+﻿using ASS_PRC.Api.Models.Request;
+using ASS_PRC.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace AudioStreaming.Api.Controllers
+namespace ASS_PRC.Api.Controllers
 {
     [Route(Helpers.SettingVersionAPI.ApiVersion)]
     [ApiController]
@@ -20,18 +16,6 @@ namespace AudioStreaming.Api.Controllers
         {
             _accountService = accountService;
         }
-
-        [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public async Task<IActionResult> AuthenticateAsync([FromBody]AuthenticateModel model)
-        {
-            var authenticateResponse = await _accountService.AuthenticateAsync(model.IdToken, model.fcmToken);
-
-            if (authenticateResponse == null)
-                return Unauthorized();
-            return Ok(authenticateResponse);
-        }
-
         [AllowAnonymous]
         [HttpPost("authenticate-webadmin")]
         public async Task<IActionResult> AuthenticateWebAdminAsync([FromBody] AuthenticateModelWebAdmin model)
@@ -41,40 +25,6 @@ namespace AudioStreaming.Api.Controllers
             if (authenticateResponse == null)
                 return Unauthorized();
             return Ok(authenticateResponse);
-        }
-
-        [HttpGet("authenticate")]
-        [AllowAnonymous]
-        public async Task<IActionResult> AuthenticateAsync()
-        {
-            try
-            {
-                var handler = new JwtSecurityTokenHandler();
-                string authHeader = Request.Headers["Authorization"];
-                authHeader = authHeader.Replace("Bearer ", "");
-                var jsonToken = handler.ReadJwtToken(authHeader);
-                if (jsonToken.ValidTo < GetTimeNowVN.GetTimeNowVietNam())
-                {
-                    return Unauthorized();
-                }
-
-                var idString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var authenticateResponse =await _accountService.AuthenticateByIdAsync(new Guid(idString));
-                return Ok(authenticateResponse);
-            }  
-            catch (Exception)
-            {
-
-                return Unauthorized();
-            }
-        }
-
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var users = _accountService.GetAll();
-            return Ok(users);
-        }
-
+        }       
     }
 }

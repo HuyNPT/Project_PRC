@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AudioStreaming.Services.Responses
+namespace ASS_PRC.Services.Responses
 {
     public class UserFavoritePlaylistsResponse
     {

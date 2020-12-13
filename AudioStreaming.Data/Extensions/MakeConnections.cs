@@ -1,4 +1,4 @@
-﻿using AudioStreaming.Data.Context;
+﻿using ASS_PRC.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AudioStreaming.Data.Extensions
+namespace ASS_PRC.Data.Extensions
 {
     public static class MakeConnections
     {

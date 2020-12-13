@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AudioStreaming.Api.Models.Request
+namespace ASS_PRC.Api.Models.Request
 {
     public class AuthenticateModelWebAdmin
     {

@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AudioStreaming.Service\AudioStreaming.Services.csproj" />
+    <ProjectReference Include="..\AudioStreaming.Service\ASS_PRC.Services.csproj" />
   </ItemGroup>
 
 

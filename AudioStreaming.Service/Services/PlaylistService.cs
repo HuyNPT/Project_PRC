@@ -1,17 +1,13 @@
-﻿using AudioStreaming.Data.Entity;
-using AudioStreaming.Data.UnitOfWork;
-using AudioStreaming.Services.DTO;
-using AudioStreaming.Services.Helpers;
-using AudioStreaming.Services.Responses;
-using FirebaseAdmin.Messaging;
-using Google.Apis.Util;
+﻿using ASS_PRC.Data.UnitOfWork;
+using ASS_PRC.Services.DTO;
+using ASS_PRC.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AudioStreaming.Services.Services
+namespace ASS_PRC.Services.Services
 {
     public class PlaylistService : IPlaylistService
     {
@@ -61,7 +57,7 @@ namespace AudioStreaming.Services.Services
            
         }
 
-        public IList<DTO.Playlist> GetPlayList(bool isSort, bool isDecending, bool isPaging, int page, int pageLimitItem, string orderBy, string searchKey) 
+       /* public IList<DTO.Playlist> GetPlayList(bool isSort, bool isDecending, bool isPaging, int page, int pageLimitItem, string orderBy, string searchKey) 
         {
             var playlistEntities = _unitOfWork.Repository<Data.Entity.Playlist>()
                 .FindAll(p => p.IsDelete == false && p.PlaylistName.StartsWith(searchKey==null?"":searchKey));
@@ -102,7 +98,7 @@ namespace AudioStreaming.Services.Services
             return playlist;
 
 
-        }
+        }*/
 
         public async Task<int> GetPlaylistCount(Guid OwnerCode)
         {
@@ -178,31 +174,7 @@ namespace AudioStreaming.Services.Services
             }
             return listPlaylist;
         }
-
-        public IList<UserFavoritePlaylist> GetUserFavoritePlayList(Guid userId)
-        {
-            IList<UserFavoritePlaylist> userFavoritePlaylists = new List<UserFavoritePlaylist>();
-
-
-            var playlistEntities = _unitOfWork.Repository<Data.Entity.Playlist>()
-                .GetAll().Where(x=>x.IsDelete == false)
-                .Include(p => p.FavoritePlaylist)
-                .Where(p => p.FavoritePlaylist.Any(f => f.AccountId == userId)).Include(f => f.Brand);
-            foreach (var item in playlistEntities)
-            {
-              
-                UserFavoritePlaylist userFavoritePlaylist = new UserFavoritePlaylist()
-                {
-                    Id = item.Id,                 
-                    ImageUrl = item.ImageUrl,
-                    PlaylistName = item.PlaylistName,
-                    DateFillter = item.DateFillter,
-                    BrandName = item.Brand.BrandName
-                };
-                 userFavoritePlaylists.Add(userFavoritePlaylist);
-            }
-            return userFavoritePlaylists;
-        }
+     
 
         public async Task<bool> PostPlayListWebAdmin(string Name, int DateFilter, string ImageUrl, Guid BrandId, List<Guid> Category, Guid UserId)
         {
@@ -238,11 +210,7 @@ namespace AudioStreaming.Services.Services
             try
             {
                 _unitOfWork.Commit();
-                var brand = _unitOfWork.Repository<Data.Entity.Brand>().Find(p => p.Id == BrandId);
-                if(brand != null)
-                {
-                    SendMsg(brand.BrandName, Name);
-                }
+                
             }
             catch (Exception e)
             {
@@ -253,53 +221,7 @@ namespace AudioStreaming.Services.Services
             return true;
         }
 
-        internal static async Task SendMsg(string brandName, string playlistName)
-        {
-            string topicString = brandName.Replace(" ", "");
-            var topic = topicString;
-
-            // See documentation on defining a message payload.
-            var message = new Message()
-            {
-                Notification = new Notification()
-                {
-                    Body = brandName + " just have new playlist - " + playlistName,
-                    Title ="Audio Streaming - new playlist" 
-                },
-                Data = new Dictionary<string, string>()
-                {
-                    { "score", "100" },
-                    { "time", "0:00" },
-                },
-                Topic = topic,
-            };
-            string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
-        }
-
-        public async Task<string> PutPlaylist(Guid playlistId, DTO.Playlist playlist, Guid ownerCode)
-        {
-            Data.Entity.Playlist playlistEntity = _unitOfWork.Repository<Data.Entity.Playlist>().GetById(playlistId);
-            if (playlistEntity == null) return "Playlist not exist";
-            if(!playlistEntity.BrandId.Equals(ownerCode)) return "Your role not permission";
-            Data.Entity.Playlist playlistUpdate = new Data.Entity.Playlist
-            {
-                Id = playlistId,
-                BrandId = playlist.BrandId,
-                CreateBy = playlist.CreateBy,
-                CreateDate = playlist.CreateDate,
-                DateFillter = playlist.DateFillter,
-                IsDelete = playlist.IsDelete,
-                ImageUrl = playlist.ImageUrl,
-                PlaylistName = playlist.PlaylistName,
-                TimePlayed = playlist.TimePlayed,
-                ModifyBy = playlist.ModifyBy,
-                ModifyDate = playlist.ModifyDate,
-            };
-            _unitOfWork.Repository<Data.Entity.Playlist>().Update(playlistUpdate, playlistId);
-            _unitOfWork.Commit();
-            return "Success";
-        }
-
+       
         public async Task<PlaylistWebAdmin> GetPlaylistById(Guid PlaylistId)
         {
             var rs =_unitOfWork.Repository<Data.Entity.Playlist>().GetAll().Where(p => p.IsDelete == false & p.Id == PlaylistId).Include(x => x.Brand)

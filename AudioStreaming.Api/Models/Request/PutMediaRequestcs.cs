@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AudioStreaming.Api.Models.Request
+namespace ASS_PRC.Api.Models.Request
 {
     public class PutMediaRequestcs
     {

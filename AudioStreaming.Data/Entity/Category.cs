@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AudioStreaming.Data.Entity
+namespace ASS_PRC.Data.Entity
 {
     public partial class Category
     {

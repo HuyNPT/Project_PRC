@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioStreaming.Api", "AudioStreaming.Api\AudioStreaming.Api.csproj", "{A7C5793E-75B3-4BF3-9B8B-B0AD66A15D95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASS_PRC.Api", "AudioStreaming.Api\ASS_PRC.Api.csproj", "{A7C5793E-75B3-4BF3-9B8B-B0AD66A15D95}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioStreaming.Data", "AudioStreaming.Data\AudioStreaming.Data.csproj", "{BC3D3F4E-E9AA-43BB-840F-0BEFB1396390}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASS_PRC.Data", "AudioStreaming.Data\ASS_PRC.Data.csproj", "{BC3D3F4E-E9AA-43BB-840F-0BEFB1396390}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioStreaming.Services", "AudioStreaming.Service\AudioStreaming.Services.csproj", "{0D0C67D9-C50E-4F66-9797-37FFC663A50F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASS_PRC.Services", "AudioStreaming.Service\ASS_PRC.Services.csproj", "{0D0C67D9-C50E-4F66-9797-37FFC663A50F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioStreaming.WebAdminAS", "AudioStreaming.WebAdminAS\AudioStreaming.WebAdminAS.csproj", "{4382A3F0-6907-4E12-8F43-6D72C03B2116}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASS_PRC.WebAdmin", "AudioStreaming.WebAdminAS\ASS_PRC.WebAdmin.csproj", "{4382A3F0-6907-4E12-8F43-6D72C03B2116}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

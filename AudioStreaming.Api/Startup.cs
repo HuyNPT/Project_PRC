@@ -1,9 +1,9 @@
 using System.Text;
-using AudioStreaming.Data.Extensions;
-using AudioStreaming.Data.Repository;
-using AudioStreaming.Data.UnitOfWork;
-using AudioStreaming.Services.Helpers;
-using AudioStreaming.Services.Services;
+using ASS_PRC.Data.Extensions;
+using ASS_PRC.Data.Repository;
+using ASS_PRC.Data.UnitOfWork;
+using ASS_PRC.Services.Helpers;
+using ASS_PRC.Services.Services;
 using Autofac;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
@@ -17,7 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace AudioStreaming.Api
+namespace ASS_PRC.Api
 {
     public class Startup
     {
@@ -101,13 +101,10 @@ namespace AudioStreaming.Api
             // Register your own things directly with Autofac, like:
 
             builder.RegisterType<AccountService>().As<IAccountService>();
-            builder.RegisterType<PlaylistService>().As<IPlaylistService>();
-            builder.RegisterType<FavoritePlaylistsService>().As<IFavoritePlaylistsService>();
+            builder.RegisterType<PlaylistService>().As<IPlaylistService>();       
             builder.RegisterType<MediaService>().As<IMediaService>();
             builder.RegisterType<StoresService>().As<IStoresService>();
-            builder.RegisterType<CurrentMediaInStoresService>().As<ICurrentMedianStoresService>();
             builder.RegisterType<BrandsService>().As<IBrandsService>();
-            builder.RegisterType<TimeSubmitService>().As<ITimeSubmitService>();
             builder.RegisterType<CategoryServices>().As<ICategoryServices>();
             builder.RegisterType<PlaylistDetailsService>().As<IPlaylistDetailsService>();
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
