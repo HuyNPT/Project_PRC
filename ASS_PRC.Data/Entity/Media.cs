@@ -8,7 +8,6 @@ namespace ASS_PRC.Data.Entity
         public Media()
         {
             CategoryMedia = new HashSet<CategoryMedia>();
-            CurrentMediaInStore = new HashSet<CurrentMediaInStore>();
             PlaylistDetail = new HashSet<PlaylistDetail>();
         }
 
@@ -28,7 +27,6 @@ namespace ASS_PRC.Data.Entity
         public Guid? OwnerCode { get; set; }
 
         public virtual ICollection<CategoryMedia> CategoryMedia { get; set; }
-        public virtual ICollection<CurrentMediaInStore> CurrentMediaInStore { get; set; }
         public virtual ICollection<PlaylistDetail> PlaylistDetail { get; set; }
     }
 }

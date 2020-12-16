@@ -14,6 +14,5 @@ namespace ASS_PRC.Data.Entity
         public double OrderPlay { get; set; }
 
         public virtual Playlist Playlist { get; set; }
-        public virtual Store Store { get; set; }
     }
 }

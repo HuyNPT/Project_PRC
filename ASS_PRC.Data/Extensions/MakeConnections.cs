@@ -12,7 +12,7 @@ namespace ASS_PRC.Data.Extensions
     {
         public static IServiceCollection ConnectToConnectionString(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AudioStreamingContext>(options =>
+            services.AddDbContext<PRCContext>(options =>
             {
                 options.UseLazyLoadingProxies();
                 options.UseSqlServer(configuration.GetConnectionString("AudioStreaming1"));

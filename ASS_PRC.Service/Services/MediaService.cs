@@ -14,9 +14,9 @@ namespace ASS_PRC.Services.Services
     {
         private const int PageLimit = 15;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly AudioStreamingContext _audioStreamingContext;
+        private readonly PRCContext _audioStreamingContext;
 
-        public MediaService(IUnitOfWork unitOfWork, AudioStreamingContext audioStreamingContext)
+        public MediaService(IUnitOfWork unitOfWork, PRCContext audioStreamingContext)
         {
             _unitOfWork = unitOfWork;
             _audioStreamingContext = audioStreamingContext;
@@ -350,12 +350,7 @@ namespace ASS_PRC.Services.Services
             foreach (var item in playlistDetails)
             {
                 _unitOfWork.Repository<Data.Entity.PlaylistDetail>().HardDelete(item.Id);
-            }
-            var currenMedia = _unitOfWork.Repository<Data.Entity.CurrentMediaInStore>().FindAll(x => x.MediaId == MediaId);
-            foreach (var item in currenMedia)
-            {
-                _unitOfWork.Repository<Data.Entity.CurrentMediaInStore>().HardDelete(item.Id);
-            }
+            }           
             _unitOfWork.Repository<Data.Entity.Media>().HardDelete(MediaId);
             try
             {

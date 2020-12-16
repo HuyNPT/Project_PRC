@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ASS_PRC.Data.Context
 {
-    public partial class AudioStreamingContext : DbContext
+    public partial class PRCContext : DbContext
     {
-        public AudioStreamingContext()
+        public PRCContext()
         {
         }
 
-        public AudioStreamingContext(DbContextOptions<AudioStreamingContext> options)
+        public PRCContext(DbContextOptions<PRCContext> options)
             : base(options)
         {
         }
@@ -21,18 +21,17 @@ namespace ASS_PRC.Data.Context
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<CategoryMedia> CategoryMedia { get; set; }
         public virtual DbSet<CategoryPlaylist> CategoryPlaylist { get; set; }
-        public virtual DbSet<CurrentMediaInStore> CurrentMediaInStore { get; set; }
-        public virtual DbSet<FavoritePlaylist> FavoritePlaylist { get; set; }
         public virtual DbSet<Media> Media { get; set; }
         public virtual DbSet<Playlist> Playlist { get; set; }
         public virtual DbSet<PlaylistDetail> PlaylistDetail { get; set; }
-        public virtual DbSet<PlaylistInStore> PlaylistInStore { get; set; }
-        public virtual DbSet<Store> Store { get; set; }
-        public virtual DbSet<TimeSubmit> TimeSubmit { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-          
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=PRC;User Id=sa;password=123456;Trusted_Connection=False;MultipleActiveResultSets=true;");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -160,54 +159,6 @@ namespace ASS_PRC.Data.Context
                     .HasConstraintName("FK_CategoryPlaylist_Playlist");
             });
 
-            modelBuilder.Entity<CurrentMediaInStore>(entity =>
-            {
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.TimeEnd).HasColumnType("datetime");
-
-                entity.Property(e => e.TimeStart).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Media)
-                    .WithMany(p => p.CurrentMediaInStore)
-                    .HasForeignKey(x => x.MediaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CurrentMediaInStore_Media");
-
-                entity.HasOne(d => d.Playlist)
-                    .WithMany(p => p.CurrentMediaInStore)
-                    .HasForeignKey(x => x.PlaylistId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CurrentMediaInStore_Playlist");
-
-                entity.HasOne(d => d.Store)
-                    .WithMany(p => p.CurrentMediaInStore)
-                    .HasForeignKey(x => x.StoreId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CurrentMediaInStore_Store");
-            });
-
-            modelBuilder.Entity<FavoritePlaylist>(entity =>
-            {
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
-
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.FavoritePlaylist)
-                    .HasForeignKey(x => x.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_FavoritePlaylist_Account");
-
-                entity.HasOne(d => d.Playlist)
-                    .WithMany(p => p.FavoritePlaylist)
-                    .HasForeignKey(x => x.PlaylistId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_FavoritePlaylist_Playlist");
-            });
-
             modelBuilder.Entity<Media>(entity =>
             {
                 entity.Property(e => e.Id)
@@ -281,77 +232,9 @@ namespace ASS_PRC.Data.Context
                     .HasConstraintName("FK_PlaylistDetail_Playlist");
             });
 
-            modelBuilder.Entity<PlaylistInStore>(entity =>
-            {
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Date).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Playlist)
-                    .WithMany(p => p.PlaylistInStore)
-                    .HasForeignKey(x => x.PlaylistId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PlaylistInStore_Playlist");
-
-                entity.HasOne(d => d.Store)
-                    .WithMany(p => p.PlaylistInStore)
-                    .HasForeignKey(x => x.StoreId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PlaylistInStore_Store");
-            });
-
-            modelBuilder.Entity<Store>(entity =>
-            {
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Address)
-                    .IsRequired()
-                    .HasMaxLength(300);
-
-                entity.Property(e => e.PassWifi)
-                    .IsRequired()
-                    .HasMaxLength(20);
-
-                entity.Property(e => e.StoreName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Wifi)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.HasOne(d => d.Brand)
-                    .WithMany(p => p.Store)
-                    .HasForeignKey(x => x.BrandId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Store_Brand");
-            });
-
-            modelBuilder.Entity<TimeSubmit>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.TimeSubmit1)
-                    .HasColumnName("TimeSubmit")
-                    .HasColumnType("datetime");
-
-                entity.HasOne(d => d.Store)
-                    .WithMany(p => p.TimeSubmit)
-                    .HasForeignKey(x => x.StoreId)
-                    .HasConstraintName("FK_TimeSubmit_Store");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.TimeSubmit)
-                    .HasForeignKey(x => x.UserId)
-                    .HasConstraintName("FK_TimeSubmit_Account1");
-            });
-
             OnModelCreatingPartial(modelBuilder);
         }
+
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

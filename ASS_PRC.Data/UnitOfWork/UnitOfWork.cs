@@ -11,8 +11,8 @@ namespace ASS_PRC.Data.UnitOfWork
     public class UnitOfWork : IUnitOfWork
     {
 
-        private readonly AudioStreamingContext _context;
-        public UnitOfWork(AudioStreamingContext context)
+        private readonly PRCContext _context;
+        public UnitOfWork(PRCContext context)
         {
             _context = context;
         }

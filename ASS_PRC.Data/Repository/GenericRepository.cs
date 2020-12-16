@@ -9,9 +9,9 @@ namespace ASS_PRC.Data.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private static AudioStreamingContext _Context;
+        private static PRCContext _Context;
         public static DbSet<T> _table { get; set; }
-        public GenericRepository(AudioStreamingContext context)
+        public GenericRepository(PRCContext context)
         {
             _Context = context;
             _table = _Context.Set<T>();

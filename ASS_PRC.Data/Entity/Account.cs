@@ -5,12 +5,6 @@ namespace ASS_PRC.Data.Entity
 {
     public partial class Account
     {
-        public Account()
-        {
-            FavoritePlaylist = new HashSet<FavoritePlaylist>();
-            TimeSubmit = new HashSet<TimeSubmit>();
-        }
-
         public Guid Id { get; set; }
         public string FirebaseProvider { get; set; }
         public string FirebaseUid { get; set; }
@@ -24,8 +18,5 @@ namespace ASS_PRC.Data.Entity
         public DateTime? ModifyDate { get; set; }
         public string FcmToken { get; set; }
         public Guid? OwnersCode { get; set; }
-
-        public virtual ICollection<FavoritePlaylist> FavoritePlaylist { get; set; }
-        public virtual ICollection<TimeSubmit> TimeSubmit { get; set; }
     }
 }

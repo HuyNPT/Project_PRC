@@ -8,7 +8,6 @@ namespace ASS_PRC.Data.Entity
         public Brand()
         {
             Playlist = new HashSet<Playlist>();
-            Store = new HashSet<Store>();
         }
 
         public Guid Id { get; set; }
@@ -21,6 +20,5 @@ namespace ASS_PRC.Data.Entity
         public string ImageUrl { get; set; }
 
         public virtual ICollection<Playlist> Playlist { get; set; }
-        public virtual ICollection<Store> Store { get; set; }
     }
 }
